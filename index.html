@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f4e8c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Russian">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<title>Russian Revival</title>
+<style>
+:root{--bg:#f6f4ef;--card:#ffffff;--ink:#1d2433;--mute:#667085;--line:#e3e0d8;--accent:#1f4e8c;--accent2:#c8553d;--good:#2f7d4f;--warn:#b7791f;--bad:#b42318;--soft:#eef2f8;--onacc:#ffffff}
+@media (prefers-color-scheme:dark){:root{--bg:#14171d;--card:#1c212b;--ink:#eceff4;--mute:#9aa4b5;--line:#2c3340;--accent:#7fb0ee;--accent2:#ef8b72;--good:#6cc58c;--warn:#e0b25a;--bad:#f07a70;--soft:#232a37;--onacc:#10151d}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{padding-bottom:84px}
+.top{display:flex;align-items:center;justify-content:space-between;max-width:640px;margin:0 auto;padding:14px 16px 4px}
+.brand{font-weight:700;letter-spacing:.02em;color:var(--accent)}
+.icon{background:none;border:1px solid var(--line);color:var(--mute);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+main{max-width:640px;margin:0 auto;padding:6px 16px 16px}
+h1{font-size:22px;margin:8px 0 4px}
+h2{font-size:17px;margin:18px 0 8px}
+p{margin:6px 0}
+.mute{color:var(--mute)}
+small{color:var(--mute)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.note{border-left:4px solid var(--accent2)}
+.btn{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 14px;cursor:pointer;min-height:44px}
+.btn.primary{background:var(--accent);color:var(--onacc);border-color:var(--accent);font-weight:600}
+.btn.wide{width:100%}
+.btn:disabled{opacity:.5;cursor:default}
+.btn small{display:block;font-size:11px;opacity:.8;color:inherit}
+.lnk{background:none;border:0;color:var(--accent);font:inherit;font-size:13px;cursor:pointer;padding:2px 4px}
+.stats{display:flex;gap:8px;margin:12px 0}
+.stats>div{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.stats b{display:block;font-size:22px}
+.stats span{font-size:12px;color:var(--mute)}
+.chk{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.chk input{width:22px;height:22px;margin-top:1px;accent-color:var(--accent)}
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tab{flex:1;background:none;border:0;padding:14px 2px;font:inherit;font-size:12.5px;color:var(--mute);cursor:pointer}
+.tab.on{color:var(--accent);font-weight:700;box-shadow:inset 0 3px 0 var(--accent)}
+.big{font-size:34px;font-weight:600;text-align:center;margin:18px 0 8px;line-height:1.2}
+.ans{font-size:22px;text-align:center;margin:8px 0}
+.ex{background:var(--soft);border-radius:10px;padding:10px;margin:10px 0}
+.ex .r{font-size:18px}
+.hint{text-align:center;color:var(--mute);font-size:14px}
+.rates{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.r0{border-color:var(--bad);color:var(--bad)}.r1{border-color:var(--warn);color:var(--warn)}.r2{border-color:var(--good);color:var(--good)}.r3{border-color:var(--accent);color:var(--accent)}
+.bar{height:8px;background:var(--soft);border-radius:99px;overflow:hidden;position:relative}
+.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+.bar .seen{background:var(--accent);opacity:.35}.bar .mat{background:var(--accent)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.spread{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.chip{display:inline-block;font-size:11px;border:1px solid var(--line);border-radius:99px;padding:2px 8px;color:var(--mute)}
+.sNew{color:var(--accent2)}.sLearning{color:var(--warn)}.sYoung{color:var(--accent)}.sMature{color:var(--good)}
+.chips{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.chips .btn{padding:8px 12px;min-height:38px}
+.chips .btn.on{background:var(--accent);color:var(--onacc);border-color:var(--accent)}
+input[type=text],input[type=date],select,textarea{width:100%;font:inherit;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);margin:4px 0}
+textarea{min-height:90px}
+.wr{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.wru{font-size:18px;font-weight:600}.wen{color:var(--mute);font-size:14px}
+.wmeta{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+pre{white-space:pre-wrap;word-wrap:break-word;background:var(--soft);border-radius:10px;padding:10px;font:13px/1.45 ui-monospace,Menlo,Consolas,monospace;margin:8px 0}
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin:10px 0}
+summary{cursor:pointer;font-weight:600}
+.opt{display:block;width:100%;text-align:left;margin:6px 0}
+.opt.ok{border-color:var(--good);background:var(--soft)}.opt.no{border-color:var(--bad)}
+.heat{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.hc{aspect-ratio:1;border-radius:5px;background:var(--soft)}
+.hc.a{background:var(--accent);opacity:.3}.hc.b{background:var(--accent);opacity:.55}.hc.c{background:var(--accent);opacity:.8}.hc.d{background:var(--accent)}
+.ph{border-left:4px solid var(--line);padding:6px 10px;margin:8px 0}
+.ph.now{border-left-color:var(--accent2);background:var(--soft);border-radius:0 10px 10px 0}
+#toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%;text-align:center}
+#toast.on{opacity:.95}
+ul{padding-left:20px;margin:6px 0}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand">Russian Revival</div><button class="icon" data-act="tab" data-v="settings">Settings</button></header>
+<main id="main"></main>
+<nav class="tabs">
+<button class="tab" data-act="tab" data-v="today">Today</button>
+<button class="tab" data-act="tab" data-v="study">Study</button>
+<button class="tab" data-act="tab" data-v="words">Words</button>
+<button class="tab" data-act="tab" data-v="speak">Speak</button>
+<button class="tab" data-act="tab" data-v="listen">Listen</button>
+<button class="tab" data-act="tab" data-v="stats">Stats</button>
+</nav>
+<div id="toast"></div>
+<script>
+(function(){
+'use strict';
+var KEY='ruRevivalV1';
+var $=function(s){return document.querySelector(s);};
+var esc=function(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
+var pad=function(n){return String(n).padStart(2,'0');};
+function ds(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function today(){return ds(new Date());}
+function parseD(s){var p=s.split('-').map(Number);return new Date(p[0],p[1]-1,p[2]);}
+function addDays(s,n){var d=parseD(s);d.setDate(d.getDate()+n);return ds(d);}
+function diffDays(a,b){return Math.round((parseD(b)-parseD(a))/864e5);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+var DAYN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+/* ---------- data ---------- */
+var DECKS=[{id:'daily',name:'Everyday life'},{id:'social',name:'Social and emotional'},{id:'media',name:'Media and current events'},{id:'bureau',name:'Bureaucracy and services'}];
+function deckName(id){for(var i=0;i<DECKS.length;i++)if(DECKS[i].id===id)return DECKS[i].name;return id;}
+
+/* format per line: Russian (apostrophe after stressed vowel)|English|Russian example|English example */
+var RAW={
+daily:{
+1:"хлеб|bread|Я купил хлеб.|I bought bread.\nмолоко'|milk|Мне нужно молоко.|I need milk.\nвода'|water|Дай мне воды, пожалуйста.|Give me some water, please.\nмагази'н|store, shop|Магазин закрыт.|The store is closed.\nавто'бус|bus|Автобус опаздывает.|The bus is running late.\nключ|key|Где мой ключ?|Where is my key?\nдве'рь|door|Закрой дверь.|Close the door.\nку'хня|kitchen|Я готовлю на кухне.|I cook in the kitchen.\nгото'вить|to cook, to prepare|Я люблю готовить.|I like to cook.\nпоку'пки|purchases, shopping|Я иду за покупками.|I'm going shopping.",
+2:"стира'ть|to wash (clothes)|По субботам я стираю.|On Saturdays I do laundry.\nкварти'ра|apartment|Мы снимаем квартиру.|We rent an apartment.\nсосе'д|neighbor|Мой сосед очень шумный.|My neighbor is very noisy.\nподъе'зд|building entrance, stairwell|Я жду тебя в подъезде.|I'll wait for you in the entrance.\nли'фт|elevator|Лифт не работает.|The elevator is not working.\nпо'чта|post office, mail|Где здесь почта?|Where is the post office around here?\nо'чередь|line, queue|Тут большая очередь.|There is a long line here.\nсда'ча|change (money back)|У вас есть сдача?|Do you have change?\nски'дка|discount|Есть скидка?|Is there a discount?",
+3:"убира'ться|to clean up, to tidy|По выходным мы убираемся в квартире.|On weekends we tidy up the apartment.\nремо'нт|renovation, repair|У нас в квартире идёт ремонт.|We have renovations going on in our apartment.\nопа'здывать|to be late|Я не люблю опаздывать.|I don't like being late.\nпереса'дка|transfer (transit)|Нужно сделать пересадку.|You need to make a transfer.\nвыходи'ть|to get off, to go out|Вы выходите на следующей?|Are you getting off at the next stop?\nме'лочь|small change, small stuff|У меня нет мелочи.|I have no small change.\nзабы'ть|to forget|Я забыл ключи.|I forgot my keys.\nпотеря'ть|to lose|Я потерял телефон.|I lost my phone."
+},
+social:{
+1:"друг|friend|Он мой лучший друг.|He is my best friend.\nсемья'|family|У меня большая семья.|I have a big family.\nлюби'ть|to love, to like|Я люблю музыку.|I love music.\nску'чно|boring, bored|Мне скучно.|I'm bored.\nрад|glad|Я очень рад тебя видеть.|I'm very glad to see you.\nгру'стно|sad|Мне грустно.|I feel sad.\nволнова'ться|to worry, to be nervous|Не волнуйся!|Don't worry!\nсмея'ться|to laugh|Мы вместе смеялись.|We laughed together.\nскуча'ть|to miss, to be bored|Я скучаю по тебе.|I miss you.\nобижа'ться|to take offense|Не обижайся.|Don't be offended.",
+2:"споко'йно|calmly, calm|Спокойно, всё хорошо.|Calm down, everything is fine.\nсомнева'ться|to doubt|Я сомневаюсь.|I doubt it.\nудивлён|surprised|Я очень удивлён.|I'm very surprised.\nпережива'ть|to worry, to go through|Не переживай, всё будет хорошо.|Don't worry, everything will be fine.\nстесня'ться|to be shy|Я стесняюсь говорить по-русски.|I'm shy about speaking Russian.\nссо'ра|quarrel|У нас была ссора.|We had a quarrel.\nпомири'ться|to make up|Мы помирились.|We made up.\nшу'тка|joke|Это была шутка.|It was a joke.\nпригласи'ть|to invite|Я хочу пригласить тебя в гости.|I want to invite you over.",
+3:"не'ловко|awkward, uncomfortable|Мне неловко.|I feel awkward.\nразочарова'ние|disappointment|Это было разочарование.|It was a disappointment.\nгорди'ться|to be proud|Я горжусь тобой.|I'm proud of you.\nнаде'яться|to hope|Я надеюсь, что ты придёшь.|I hope you'll come.\nдоверя'ть|to trust|Я тебе доверяю.|I trust you.\nпрости'ть|to forgive|Прости меня.|Forgive me."
+},
+media:{
+1:"но'вости|news|Я читаю новости.|I read the news.\nгазе'та|newspaper|Он читает газету.|He is reading a newspaper.\nфильм|movie|Какой хороший фильм!|What a good movie!\nпереда'ча|TV or radio program|Это интересная передача.|This is an interesting program.\nсайт|website|Этот сайт не работает.|This website isn't working.\nтелефо'н|phone|Мой телефон разрядился.|My phone died.\nсообще'ние|message|Я получил сообщение.|I received a message.\nинтерне'т|internet|У нас нет интернета.|We have no internet.",
+2:"смартфо'н|smartphone|Мой смартфон старый.|My smartphone is old.\nприложе'ние|app, attachment|Скачай это приложение.|Download this app.\nскача'ть|to download|Я скачал фильм.|I downloaded a movie.\nссы'лка|link|Отправь мне ссылку.|Send me the link.\nподписа'ться|to subscribe, to follow|Я подписался на канал.|I subscribed to the channel.\nзаголо'вок|headline, title|Заголовок интересный.|The headline is interesting.\nсериа'л|TV series|Мы смотрим новый сериал.|We're watching a new series.\nбло'гер|blogger|Он известный блогер.|He is a well-known blogger.",
+3:"расследова'ние|investigation|Журналист провёл расследование.|The journalist conducted an investigation.\nле'нта|feed, ribbon|Я листаю ленту.|I'm scrolling the feed.\nэфи'р|broadcast, airtime|Передача идёт в прямом эфире.|The program is airing live.\nци'фровой|digital|Это цифровая камера.|This is a digital camera.\nобновле'ние|update|Вышло обновление.|An update came out.\nв тре'нде|trending|Это сейчас в тренде.|This is trending right now.\nлайк|like (social media)|Поставь лайк.|Give it a like."
+},
+bureau:{
+1:"докуме'нт|document|Покажите ваш документ, пожалуйста.|Please show your document.\nпа'спорт|passport|Вот мой паспорт.|Here is my passport.\nа'дрес|address|Какой у вас адрес?|What is your address?\nзаписа'ться|to sign up, to make an appointment|Я хочу записаться к врачу.|I want to make a doctor's appointment.\nврач|doctor|Мне нужно к врачу.|I need to see a doctor.\nреце'пт|prescription, recipe|Вот рецепт.|Here is the prescription.\nапте'ка|pharmacy|Где здесь аптека?|Where is the pharmacy around here?\nбанк|bank|Банк открыт до шести.|The bank is open until six.",
+2:"спра'вка|certificate, official statement|Мне нужна справка.|I need a certificate.\nзаявле'ние|application, statement|Я напишу заявление.|I will write an application.\nбланк|form|Заполните бланк.|Fill out the form.\nпо'дпись|signature|Здесь нужна подпись.|A signature is needed here.\nстрахо'вка|insurance|У меня есть страховка.|I have insurance.\nви'за|visa|Мне нужна виза.|I need a visa.\nквита'нция|receipt, bill|Сохраните квитанцию.|Keep the receipt.\nоплати'ть|to pay for|Как оплатить счёт?|How do I pay the bill?\nприём|reception, appointment hours|Когда приём?|When are the reception hours?",
+3:"дове'ренность|power of attorney|Нужна доверенность.|A power of attorney is needed.\nрегистра'ция|registration|Нужна регистрация.|Registration is required.\nштраф|fine, penalty|Мне выписали штраф.|I was given a fine.\nнало'г|tax|Мне нужно заплатить налог.|I need to pay a tax.\nдогово'р|contract|Я подписал договор.|I signed a contract.\nаре'нда|rent, lease|Аренда очень дорогая.|The rent is very expensive."
+}};
+var BASE=[];
+DECKS.forEach(function(d){[1,2,3].forEach(function(l){(RAW[d.id][l]||'').split('\n').forEach(function(line,i){var p=line.trim().split('|');if(p.length<2)return;BASE.push({id:d.id+l+'_'+i,deck:d.id,lvl:l,ru:p[0],en:p[1],ex:p[2]||'',exEn:p[3]||''});});});});
+
+var PHASES=[
+{m:[1,2],name:'Wake it up',deck:'daily',theme:'everyday life: home, shopping, transport and errands',focus:'Vocabulary recall plus slow listening. Goal: everyday words come back without effort.'},
+{m:[3,4],name:'People and feelings',deck:'social',theme:'friends, family, emotions, opinions and small talk',focus:'Speak with Claude twice a week. Goal: express feelings and opinions in short sentences.'},
+{m:[5,6],name:'Hesitate less',deck:'social',theme:'storytelling, describing your day, and explaining what you mean when you forget a word',focus:'Narrate your day, retell events, and practice workarounds for missing words.'},
+{m:[7,8],name:"Today's Russian",deck:'media',theme:'modern media, technology, social media and expressions that are new since the early 2000s',focus:'Normal-speed listening and updating vocabulary that changed since you lived there.'},
+{m:[9,10],name:'Official life',deck:'bureau',theme:'offices, banks, clinics, documents, renting and paperwork',focus:'Formal role-plays with polite forms of address.'},
+{m:[11,12],name:'Consolidate and polish',deck:'daily',mixed:true,theme:'mixed review across all themes, with longer conversations',focus:'Patch grammar gaps (cases, aspect), hold long conversations, re-test old vocabulary.'}];
+
+var TASKS=[
+{t:'Weekly review',d:'Open Stats, check your streak and weak spots, read the grammar glance below, and optionally ask Claude to quiz you on this week\'s words (Speak tab).',v:'stats',b:'Open Stats'},
+{t:'Say it aloud',d:'Pick 5 words you rated Good or Easy today and say a full sentence out loud with each one. Mistakes are fine, speaking is the point.',v:'words',b:'Browse words'},
+{t:'Speak with Claude',d:'A 5-minute role-play in Russian. Copy the prompt and paste it into a Claude chat.',v:'speak',b:'Get a prompt'},
+{t:'Listening quiz',d:'Five questions in the Listen tab. Switch on slow speech if you need it.',v:'listen',b:'Open Listen'},
+{t:'Narrate your day',d:'Write 4-6 sentences about your day in Russian and get corrections from Claude.',v:'speak',b:'Get a prompt'},
+{t:'Dictation',d:'Listen to three sentences, write or repeat them, then check yourself.',v:'listen',b:'Open Listen'},
+{t:'Real Russian',d:'5 minutes of real Russian audio, video or text on the current theme. Add 3 new words as cards.',v:'words',b:'Add words'}];
+
+var GRAM=[
+{t:'The six cases at a glance',b:'Nominative: the subject. Genitive: of, absence (нет). Dative: to or for (мне). Accusative: the direct object. Instrumental: with, by means of. Prepositional: about, in, on.'},
+{t:'Genitive after нет',b:'Absence takes the genitive: У меня нет времени (I have no time). Хлеба нет (there is no bread).'},
+{t:'Dative for feelings and needs',b:'Мне холодно, мне скучно, мне нужно, мне нравится. The person experiencing it goes in the dative.'},
+{t:'Instrumental',b:'Used with с (with): с другом. Also for professions and roles after "work as": Я работаю врачом.'},
+{t:'Prepositional for location',b:'в Москве, в квартире, на работе, на почте. Remember в vs на is largely lexical, so learn them with each noun.'},
+{t:'Aspect: process vs result',b:'Imperfective: process, habit, repetition (Я читал книгу). Perfective: completed result (Я прочитал книгу).'},
+{t:'Verbs of motion',b:'идти (on foot, one direction) vs ходить (habitual or round trip). ехать (by vehicle, one direction) vs ездить (habitual or round trip).'},
+{t:'Accusative and animacy',b:'Inanimate masculine accusative equals nominative: вижу стол. Animate masculine takes the genitive form: вижу брата.'},
+{t:'Numbers and nouns',b:'1 + nominative singular (один стол). 2-4 + genitive singular (два стола). 5 and up + genitive plural (пять столов).'},
+{t:'Possession with есть',b:'У меня есть машина (I have a car). Negative: У меня нет машины.'},
+{t:'Past tense gender',b:'The past tense agrees with the subject: он пошёл, она пошла, оно пошло, они пошли.'},
+{t:'Polite wishes with бы',b:'Я бы хотел кофе (I would like coffee). Women say Я бы хотела. Бы softens requests.'}];
+
+var SCEN={
+daily:['Buying groceries at a market and asking about prices','Asking a neighbor about noise in the building','Asking a bus driver where to get off','Reporting a broken elevator to the building manager','Returning an item to a store and asking for a refund'],
+social:['Catching up with an old friend after many years','Apologizing after an argument','Inviting a colleague to your home for dinner','Comforting a friend who is nervous about an exam','Telling a friend about a funny thing that happened to you'],
+media:['Recommending a TV series to a friend and explaining why','Explaining a news story you just read','Helping a relative fix a phone app problem','Debating which video blogger is worth following'],
+bureau:['Making a doctor appointment by phone','Asking a bank clerk how to open an account','Asking at an office which certificate you need','Negotiating the rent for an apartment']};
+
+var IV=[0,1,2,4,8,16,32,64];
+
+/* ---------- state ---------- */
+var storageOK=true;
+function def(){return {v:1,start:today(),cfg:{newPerDay:5,stress:true,dir:'mixed'},cards:{},custom:[],log:{},checks:{},placement:null,spk:[]};}
+function load(){var d=def();try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);d=Object.assign(d,o);d.cfg=Object.assign(def().cfg,o.cfg||{});}}catch(e){storageOK=false;}return d;}
+var S=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){storageOK=false;}}
+try{localStorage.setItem('__t','1');localStorage.removeItem('__t');}catch(e){storageOK=false;}
+
+function fmt(s){return S.cfg.stress?s.replace(/'/g,'\u0301'):s.replace(/'/g,'');}
+function plain(s){return s.replace(/'/g,'');}
+function allCards(){return BASE.concat(S.custom);}
+function newOrder(){return S.custom.concat(BASE).filter(function(c){return !S.cards[c.id];});}
+function dueCards(){var t=today();return allCards().filter(function(c){var s=S.cards[c.id];return s&&s.due<=t;});}
+function lg(){var t=today();return S.log[t]||(S.log[t]={reviews:0,new:0,listen:0});}
+function ck(){var t=today();return S.checks[t]||(S.checks[t]={core:false,focus:false});}
+function newLeft(){var t=today();return Math.max(0,S.cfg.newPerDay-((S.log[t]||{}).new||0));}
+function status(c){var s=S.cards[c.id];if(!s)return 'New';if(s.box===0)return 'Learning';if(s.box>=5)return 'Mature';return 'Young';}
+function monthIdx(){var m=Math.floor(diffDays(S.start,today())/30.4375)+1;return m<1?1:m;}
+function curPhase(){var m=monthIdx();for(var i=0;i<PHASES.length;i++)if(m>=PHASES[i].m[0]&&m<=PHASES[i].m[1])return PHASES[i];return {name:'Maintenance',deck:'daily',mixed:true,theme:'mixed review across all themes',focus:'Keep a light daily habit and talk to real people as often as you can.'};}
+function streak(){var n=0,d=today();if(!(S.checks[d]&&S.checks[d].core))d=addDays(d,-1);while(S.checks[d]&&S.checks[d].core){n++;d=addDays(d,-1);}return n;}
+function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},1800);}
+
+/* ---------- speech ---------- */
+function hasRu(){try{return window.speechSynthesis.getVoices().some(function(v){return /^ru/i.test(v.lang);});}catch(e){return false;}}
+function speak(text,slow){try{if(!('speechSynthesis' in window))return false;var u=new SpeechSynthesisUtterance(plain(text));u.lang='ru-RU';var v=window.speechSynthesis.getVoices().filter(function(x){return /^ru/i.test(x.lang);})[0];if(v)u.voice=v;u.rate=slow?0.7:0.95;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);return true;}catch(e){return false;}}
+function copyText(t){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast('Copied');},function(){fb(t);});}else fb(t);}
+function fb(t){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast('Copied');}catch(e){toast('Copy failed, select the text manually');}document.body.removeChild(a);}
+
+/* ---------- views ---------- */
+var VIEW='today';
+var SES=null, PL=null, SCN=null;
+var LS={mode:'word',q:null,ans:null,score:0,n:0,slow:true,revealed:false};
+
+function go(v){VIEW=v;render();try{window.scrollTo(0,0);}catch(e){}}
+function render(){
+ var fns={today:vToday,study:vStudy,words:vWords,speak:vSpeak,listen:vListen,stats:vStats,settings:vSettings,place:vPlace};
+ var m=$('#main');var warn=storageOK?'':'<div class="card note"><b>Progress may not be saved.</b> This browser is blocking local storage, which is common in in-app previews. Open the file in a regular browser, or use Settings to copy a backup.</div>';
+ m.innerHTML=warn+fns[VIEW]();
+ document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('on',t.dataset.v===VIEW);});
+ if(VIEW==='words')filterWords();
+}
+
+function unseenN(){return newOrder().length;}
+
+function vToday(){
+ var t=today(),ph=curPhase(),wd=new Date().getDay(),tk=TASKS[wd],c=S.checks[t]||{};
+ var due=dueCards().length,nl=Math.min(newLeft(),unseenN()),mi=monthIdx();
+ var h='<h1>'+DAYN[wd]+', '+new Date().toLocaleDateString(undefined,{month:'long',day:'numeric'})+'</h1>';
+ h+='<p class="mute">'+(mi>12?'Maintenance mode':'Month '+mi+' of 12')+': <b>'+esc(ph.name)+'</b><br>'+esc(ph.focus)+'</p>';
+ if(!S.placement)h+='<div class="card note"><b>Start here: 2-minute placement check</b><p>Fifteen words, self-graded. It decides which starter cards you review versus learn fresh. Self-grading is rough, so treat the result as a first guess.</p><button class="btn primary" data-act="place">Take the check</button></div>';
+ h+='<div class="stats"><div><b>'+streak()+'</b><span>day streak</span></div><div><b>'+due+'</b><span>due</span></div><div><b>'+nl+'</b><span>new today</span></div></div>';
+ h+='<div class="card"><label class="chk"><input type="checkbox" data-act="chk" data-k="core"'+(c.core?' checked':'')+'><span><b>1. Flashcards</b> (8-10 min)</span></label><p class="mute">'+((due+nl)?due+' to review, '+nl+' new.':'Nothing due right now.')+'</p><button class="btn primary" data-act="startsess">Start session</button></div>';
+ h+='<div class="card"><label class="chk"><input type="checkbox" data-act="chk" data-k="focus"'+(c.focus?' checked':'')+'><span><b>2. '+esc(tk.t)+'</b> (4-5 min)</span></label><p class="mute">'+esc(tk.d)+(wd===6?' Current theme: '+esc(ph.theme)+'.':'')+'</p><button class="btn" data-act="tab" data-v="'+tk.v+'">'+esc(tk.b)+'</button></div>';
+ if(unseenN()===0)h+='<div class="card note"><b>Starter cards finished.</b><p>New words now come from you and Claude. The Speak tab has a ready prompt that generates cards for the current theme, and Words lets you import them in one paste.</p><button class="btn" data-act="tab" data-v="speak">Open Speak</button></div>';
+ var gi=Math.floor(diffDays(S.start,t)/7)%GRAM.length;
+ h+='<details'+(wd===0?' open':'')+'><summary>Grammar glance of the week</summary><p><b>'+esc(GRAM[gi].t)+'</b></p><p>'+esc(GRAM[gi].b)+'</p><p class="mute">Grammar is your lowest priority, so this is a one-minute read, not a drill.</p></details>';
+ return h;
+}
+
+/* ----- study ----- */
+function mk(c){var d=S.cfg.dir;if(d==='mixed')d=Math.random()<0.5?'ruen':'enru';return {card:c,dir:d,tries:0};}
+function startSession(extra){
+ var rev=dueCards().sort(function(a,b){return S.cards[a.id].due<S.cards[b.id].due?-1:1;}).slice(0,25);
+ var no=newOrder();var nNew=extra?5:Math.min(newLeft(),no.length);var nw=no.slice(0,nNew);
+ var q=shuffle(rev).map(mk).concat(nw.map(function(c){return {card:c,dir:'ruen',tries:0};}));
+ if(!q.length){SES=null;toast('Nothing due right now');go('study');return;}
+ SES={q:q,i:0,shown:false,start:Date.now(),rated:0,good:0,done:false};
+ go('study');
+}
+function prev(st,r){var b=st?st.box:0;if(r===0)return 'today';if(r===1)return '1 day';var nb=Math.min(7,b+(r===2?1:3));return IV[nb]+(IV[nb]===1?' day':' days');}
+function rate(r){
+ var it=SES.q[SES.i],c=it.card,t=today();var st=S.cards[c.id];var wasNew=!st;
+ if(!st)st={box:0,due:t,reps:0,lapses:0,last:t};
+ st.reps++;st.last=t;
+ if(r===0){st.lapses++;st.box=0;if(it.tries<2){SES.q.push({card:c,dir:it.dir,tries:it.tries+1});st.due=t;}else st.due=addDays(t,1);}
+ else if(r===1){st.box=Math.max(1,st.box);st.due=addDays(t,1);}
+ else{st.box=Math.min(7,st.box+(r===2?1:3));st.due=addDays(t,IV[st.box]);}
+ S.cards[c.id]=st;
+ var L=lg();L.reviews++;if(wasNew)L.new++;
+ SES.rated++;if(r>=2)SES.good++;
+ SES.i++;SES.shown=false;
+ if(SES.i>=SES.q.length){SES.done=true;SES.mins=Math.max(1,Math.round((Date.now()-SES.start)/60000));ck().core=true;}
+ save();render();
+}
+function vStudy(){
+ if(!SES){
+  var due=dueCards().length,nl=Math.min(newLeft(),unseenN()),tot=due+nl;
+  var h='<h1>Study</h1><div class="card"><p><b>'+due+'</b> due, <b>'+nl+'</b> new today.</p><p class="mute">'+(tot?'About '+Math.max(1,Math.ceil(Math.min(tot,30)*0.4))+' minutes.':'You are caught up.')+'</p><button class="btn primary wide" data-act="startsess"'+(tot?'':' disabled')+'>Start session</button></div>';
+  if(unseenN()>0)h+='<button class="btn wide" data-act="extra">Learn 5 extra new cards</button>';
+  else h+='<div class="card note"><b>No unseen cards left.</b><p>Generate the next batch with Claude from the Speak tab and import it in Words.</p></div>';
+  h+='<p class="mute">Keys: Space reveals, 1-4 rates.</p>';
+  return h;
+ }
+ if(SES.done){
+  var acc=SES.rated?Math.round(100*SES.good/SES.rated):0;
+  return '<h1>Session complete</h1><div class="card"><p><b>'+SES.rated+'</b> ratings in about <b>'+SES.mins+'</b> min.</p><p><b>'+acc+'%</b> rated Good or Easy.</p><p class="mute">Flashcards are checked off on Today.</p></div><button class="btn primary wide" data-act="endsess">Back to Today</button>'+(unseenN()>0?'<button class="btn wide" style="margin-top:8px" data-act="extra">Learn 5 extra new cards</button>':'');
+ }
+ var it=SES.q[SES.i],c=it.card,st=S.cards[c.id],total=SES.q.length;
+ var pct=Math.round(100*SES.i/total);
+ var h2='<div class="spread"><small>Card '+(SES.i+1)+' of '+total+'</small><small>'+esc(deckName(c.deck))+(it.isNew||!st?' (new)':'')+'</small></div><div class="bar" style="margin:6px 0"><i class="mat" style="width:'+pct+'%"></i></div><div class="card">';
+ if(it.dir==='ruen'){h2+='<div class="big">'+esc(fmt(c.ru))+'</div><div class="hint"><button class="lnk" data-act="speak" data-t="'+esc(c.ru)+'">Listen</button></div>';}
+ else{h2+='<div class="big">'+esc(c.en)+'</div><div class="hint">Say it in Russian out loud, then reveal.</div>';}
+ if(!SES.shown){h2+='<button class="btn primary wide" style="margin-top:14px" data-act="reveal">Show answer</button></div>';return h2;}
+ h2+='<div class="ans">'+(it.dir==='ruen'?esc(c.en):esc(fmt(c.ru))+' <button class="lnk" data-act="speak" data-t="'+esc(c.ru)+'">Listen</button>')+'</div>';
+ if(c.ex)h2+='<div class="ex"><div class="r">'+esc(fmt(c.ex))+' <button class="lnk" data-act="speak" data-t="'+esc(c.ex)+'">Listen</button></div>'+(c.exEn?'<div class="mute">'+esc(c.exEn)+'</div>':'')+'</div>';
+ h2+='<div class="rates">';
+ ['Forgot','Hard','Good','Easy'].forEach(function(l,r){h2+='<button class="btn r'+r+'" data-act="rate" data-r="'+r+'">'+l+'<small>'+prev(st,r)+'</small></button>';});
+ h2+='</div></div>';
+ return h2;
+}
+
+/* ----- words ----- */
+function rowHTML(c){var s=status(c);return '<div class="wr" data-s="'+esc((plain(c.ru)+' '+c.en+' '+deckName(c.deck)).toLowerCase())+'" data-d="'+c.deck+'"><div><div class="wru">'+esc(fmt(c.ru))+'</div><div class="wen">'+esc(c.en)+'</div></div><div class="wmeta"><span class="chip s'+s+'">'+s+'</span>'+(c.id.charAt(0)==='u'?'<button class="lnk" data-act="delc" data-id="'+c.id+'">remove</button>':'')+'</div></div>';}
+function deckOpts(sel){return DECKS.map(function(d){return '<option value="'+d.id+'"'+(d.id===sel?' selected':'')+'>'+esc(d.name)+'</option>';}).join('');}
+function filterWords(){var qe=$('#q');if(!qe)return;var q=(qe.value||'').toLowerCase().trim(),d=$('#fd').value,n=0;document.querySelectorAll('.wr').forEach(function(r){var ok=(!q||r.dataset.s.indexOf(q)>-1)&&(!d||r.dataset.d===d);r.style.display=ok?'':'none';if(ok)n++;});$('#cnt').textContent=n+' shown';}
+function vWords(){
+ var ph=curPhase();
+ var h='<h1>Words</h1><p class="mute">'+allCards().length+' cards. Your own and imported cards are studied first.</p>';
+ h+='<details><summary>Add a word you just missed</summary><input type="text" id="nru" placeholder="Russian (apostrophe after stressed vowel is optional)"><input type="text" id="nen" placeholder="English meaning"><input type="text" id="nex" placeholder="Example sentence in Russian (optional)"><input type="text" id="nexen" placeholder="Example translation (optional)"><select id="ndeck">'+deckOpts(ph.deck)+'</select><button class="btn primary wide" data-act="addcard">Add card</button></details>';
+ h+='<details><summary>Import cards from Claude</summary><p class="mute">One card per line: Russian|English|Example|Example translation. The Speak tab has a prompt that makes Claude produce exactly this.</p><textarea id="imp-t" placeholder="молоко\'|milk|Мне нужно молоко.|I need milk."></textarea><select id="imp-d">'+deckOpts(ph.deck)+'</select><button class="btn primary wide" data-act="import">Import</button></details>';
+ h+='<div class="row" style="margin-top:12px"><input type="text" id="q" placeholder="Search" style="flex:2"><select id="fd" style="flex:1"><option value="">All decks</option>'+deckOpts('')+'</select></div><small id="cnt"></small>';
+ h+='<div>'+allCards().map(rowHTML).join('')+'</div>';
+ return h;
+}
+function newId(){return 'u'+Date.now().toString(36)+Math.floor(Math.random()*1e5).toString(36);}
+function hasWord(ru){var p=plain(ru).toLowerCase();return allCards().some(function(c){return plain(c.ru).toLowerCase()===p;});}
+
+/* ----- speak ----- */
+var CTX='Context: I lived in Russia for almost two years about 25 years ago and was fluent in daily life. I am now rusty but functional. I study 10-15 minutes a day and I type slowly, so keep tasks short.';
+function pickScn(){var ph=curPhase(),pool=ph.mixed?[].concat(SCEN.daily,SCEN.social,SCEN.media,SCEN.bureau):SCEN[ph.deck];SCN=pool[Math.floor(Math.random()*pool.length)];}
+function weekWords(){var t=today();return allCards().filter(function(c){var s=S.cards[c.id];return s&&s.last&&diffDays(s.last,t)<=7;}).slice(0,25).map(function(c){return plain(c.ru)+' = '+c.en;}).join('; ');}
+function prompts(){
+ var ph=curPhase();
+ return [
+ {t:'5-minute role-play',x:CTX+'\n\nTask: be my Russian conversation partner for a 5-minute role-play.\nScenario: '+SCN+'\n\nRules:\n- Speak only Russian, simple to intermediate level, one or two short sentences per turn, then wait for my reply.\n- Ask questions I can answer in a short phrase.\n- If I write "help", give me a hint in English.\n- Do not correct me mid-conversation. After about 8 exchanges give me: (1) the 5 most important corrections, (2) 5 useful words from this scenario, (3) any expressions of mine that sound dated compared with modern Russian.'},
+ {t:'Narrate your day (corrections)',x:CTX+'\n\nI will write 4-6 short sentences in Russian about my day. For my text, give me: (1) a natural-sounding rewrite, (2) the 3 most important corrections explained simply, (3) 3 vocabulary words worth learning, one per line in this format: Russian|English|Russian example|English example (put an apostrophe right after the stressed vowel of the Russian word). Ask me for my text now.'},
+ {t:'Generate the next batch of flashcards',x:CTX+'\n\nCreate 20 Russian flashcards on this theme: '+ph.theme+'.\nInclude modern words that may be new since the early 2000s, and mix easy and harder items. Output ONLY the lines, one per card, no numbering, no headers, no extra text, in exactly this format:\nRussian word or phrase|English meaning|Short Russian example sentence|English translation of the example\nMark the stressed vowel of the Russian headword with an apostrophe right after it, for example:\nмолоко\'|milk|Мне нужно молоко.|I need milk.'},
+ {t:'Prepare for a chat with a real person',x:CTX+'\n\nI will soon talk with a Russian speaker. Give me: (1) 10 natural conversation starters for the theme "'+ph.theme+'", each with an English translation, (2) 10 phrases I can use when I forget a word or need time to think, (3) 5 questions I could ask to keep the other person talking. Keep the Russian at simple to intermediate level.'},
+ {t:'Weekly quiz on this week\'s words',x:CTX+'\n\nQuiz me on the words I studied this week, one question at a time, mixing Russian to English and English to Russian, and wait for my answer each time. After 10 questions, summarize which words I should review. My words: '+(weekWords()||'(none studied yet, ask me what I studied)')+'.'}
+ ];
+}
+function vSpeak(){
+ if(!SCN)pickScn();
+ var ph=curPhase();
+ var h='<h1>Speak with Claude</h1><p class="mute">Copy a prompt, paste it into a Claude chat, and answer in Russian. Prompts adapt to your current phase: <b>'+esc(ph.name)+'</b>.</p>';
+ h+='<div class="card"><div class="spread"><div><small>Today\'s scenario</small><div><b>'+esc(SCN)+'</b></div></div><button class="btn" data-act="newscn">Another</button></div></div>';
+ prompts().forEach(function(p,i){h+='<details'+(i===0?' open':'')+'><summary>'+esc(p.t)+'</summary><pre id="pr'+i+'">'+esc(p.x)+'</pre><button class="btn primary" data-act="copy" data-src="pr'+i+'">Copy prompt</button></details>';});
+ h+='<h2>Practice log</h2><p class="mute">Log real conversations (with a person or with Claude): what went well, which words you missed. Then add missed words in the Words tab.</p><textarea id="spk-t" placeholder="e.g. 10 min with a friend, froze on the word for appointment"></textarea><button class="btn" data-act="savespk">Save note</button>';
+ (S.spk||[]).slice(-8).reverse().forEach(function(e){h+='<div class="card"><small>'+esc(e.d)+'</small><p>'+esc(e.t)+'</p></div>';});
+ return h;
+}
+
+/* ----- listen ----- */
+function uniq(a){var s={},o=[];a.forEach(function(x){if(!s[x]){s[x]=1;o.push(x);}});return o;}
+function lsNext(){
+ var pool=allCards().filter(function(c){return LS.mode==='word'?true:!!(c.ex&&c.exEn);});
+ if(pool.length<4){LS.q=null;toast('Not enough cards with examples yet');return;}
+ var c=pool[Math.floor(Math.random()*pool.length)],text,ans,opts=null;
+ if(LS.mode==='word'){text=c.ru;ans=c.en;opts=[c.en].concat(uniq(shuffle(pool).map(function(x){return x.en;}).filter(function(e){return e!==c.en;})).slice(0,3));}
+ else if(LS.mode==='sent'){text=c.ex;ans=c.exEn;opts=[c.exEn].concat(uniq(shuffle(pool).map(function(x){return x.exEn;}).filter(function(e){return e!==c.exEn;})).slice(0,3));}
+ else{text=c.ex;ans=c.exEn;}
+ LS.q={c:c,text:text,ans:ans,opts:opts?shuffle(opts):null};LS.ans=null;LS.revealed=false;
+ speak(text,LS.slow);
+}
+function lsScore(ok){LS.n++;if(ok)LS.score++;lg().listen=(lg().listen||0)+1;save();}
+function vListen(){
+ var h='<h1>Listening</h1>';
+ var noTTS=!('speechSynthesis' in window);
+ if(noTTS||!hasRu())h+='<div class="card note"><b>No Russian voice detected.</b><p>This quiz uses your device\'s built-in text-to-speech. If nothing plays, install a Russian voice in your system settings. Synthetic voices also sound flatter than native speakers, so mix in real audio too.</p></div>';
+ h+='<div class="chips">'+[['word','Words'],['sent','Sentences'],['dict','Dictation']].map(function(m){return '<button class="btn'+(LS.mode===m[0]?' on':'')+'" data-act="lmode" data-m="'+m[0]+'">'+m[1]+'</button>';}).join('')+'</div>';
+ h+='<label class="chk"><input type="checkbox" data-act="slow"'+(LS.slow?' checked':'')+'><span>Slow speech</span></label><p class="mute">This round: '+LS.score+' of '+LS.n+' correct.</p>';
+ if(!LS.q)return h+'<button class="btn primary wide" data-act="lnext">Start</button>';
+ var q=LS.q;
+ h+='<div class="card"><button class="btn wide" data-act="lplay">Play again</button>';
+ if(q.opts){
+  q.opts.forEach(function(o,i){var cls='btn opt';if(LS.ans!==null){if(o===q.ans)cls+=' ok';else if(i===LS.ans)cls+=' no';}h+='<button class="'+cls+'" data-act="lans" data-i="'+i+'"'+(LS.ans!==null?' disabled':'')+'>'+esc(o)+'</button>';});
+  if(LS.ans!==null){h+='<div class="ex"><div class="r">'+esc(fmt(q.text))+'</div><div class="mute">'+esc(q.ans)+'</div></div><button class="btn primary wide" data-act="lnext">Next</button>';}
+ }else{
+  if(!LS.revealed)h+='<p class="mute">Write it down or repeat it aloud, then check.</p><button class="btn primary wide" data-act="lreveal">Show text</button>';
+  else h+='<div class="ex"><div class="r">'+esc(fmt(q.text))+'</div><div class="mute">'+esc(q.ans)+'</div></div><div class="row"><button class="btn r2" style="flex:1" data-act="lself" data-k="1">Got it</button><button class="btn r0" style="flex:1" data-act="lself" data-k="0">Missed</button></div>';
+ }
+ return h+'</div>';
+}
+
+/* ----- stats ----- */
+function vStats(){
+ var all=allCards(),t=today(),cnt={New:0,Learning:0,Young:0,Mature:0};
+ all.forEach(function(c){cnt[status(c)]++;});
+ var h='<h1>Stats</h1><div class="stats"><div><b>'+streak()+'</b><span>day streak</span></div><div><b>'+cnt.Mature+'</b><span>mature</span></div><div><b>'+all.length+'</b><span>cards</span></div></div>';
+ h+='<div class="card"><div class="row"><span class="chip sNew">New '+cnt.New+'</span><span class="chip sLearning">Learning '+cnt.Learning+'</span><span class="chip sYoung">Young '+cnt.Young+'</span><span class="chip sMature">Mature '+cnt.Mature+'</span></div><p class="mute">Mature means the next review is 16 or more days away.</p></div>';
+ h+='<h2>By deck</h2>';
+ DECKS.forEach(function(d){var cs=all.filter(function(c){return c.deck===d.id;}),n=cs.length||1,seen=cs.filter(function(c){return S.cards[c.id];}).length,mat=cs.filter(function(c){return status(c)==='Mature';}).length;h+='<div style="margin:8px 0"><div class="spread"><span>'+esc(d.name)+'</span><small>'+seen+' seen, '+mat+' mature of '+cs.length+'</small></div><div class="bar"><i class="seen" style="width:'+Math.round(100*seen/n)+'%"></i><i class="mat" style="width:'+Math.round(100*mat/n)+'%"></i></div></div>';});
+ h+='<h2>Last 28 days</h2><div class="heat">';
+ for(var i=27;i>=0;i--){var d=addDays(t,-i),n=(S.log[d]||{}).reviews||0,k=n===0?'':(n<=5?'a':(n<=15?'b':(n<=30?'c':'d')));h+='<div class="hc '+k+'" title="'+d+': '+n+' reviews"></div>';}
+ h+='</div><small>Darker means more reviews that day.</small>';
+ var tr=0,tl=0,days=0;for(var k2 in S.log){tr+=S.log[k2].reviews||0;tl+=S.log[k2].listen||0;}for(var k3 in S.checks)if(S.checks[k3].core)days++;
+ h+='<p class="mute" style="margin-top:10px">Total reviews: '+tr+'. Listening answers: '+tl+'. Days with flashcards done: '+days+'.</p>';
+ h+='<h2>12-month roadmap</h2>';
+ var mi=monthIdx();
+ PHASES.forEach(function(p){var now=mi>=p.m[0]&&mi<=p.m[1];h+='<div class="ph'+(now?' now':'')+'"><b>Months '+p.m[0]+'-'+p.m[1]+': '+esc(p.name)+'</b>'+(now?' <span class="chip">you are here</span>':'')+'<div class="mute">'+esc(p.focus)+'</div></div>';});
+ return h;
+}
+
+/* ----- settings ----- */
+function vSettings(){
+ var c=S.cfg;
+ var h='<h1>Settings</h1>';
+ h+='<div class="card"><label>New cards per day</label><select data-cfg="newPerDay">'+[3,5,8,10].map(function(n){return '<option'+(c.newPerDay===n?' selected':'')+'>'+n+'</option>';}).join('')+'</select>';
+ h+='<label>Card direction</label><select data-cfg="dir"><option value="mixed"'+(c.dir==='mixed'?' selected':'')+'>Mixed (new cards always Russian first)</option><option value="ruen"'+(c.dir==='ruen'?' selected':'')+'>Russian to English</option><option value="enru"'+(c.dir==='enru'?' selected':'')+'>English to Russian (speaking)</option></select>';
+ h+='<label class="chk" style="margin:10px 0"><input type="checkbox" data-cfg="stress"'+(c.stress?' checked':'')+'><span>Show stress marks on Russian words</span></label>';
+ h+='<label>Plan start date</label><input type="date" data-cfg="start" value="'+esc(S.start)+'"></div>';
+ h+='<div class="card"><b>Placement check</b><p class="mute">'+(S.placement?'Last taken '+esc(S.placement.date)+'. Level 1: '+S.placement.acc[1][0]+'/'+S.placement.acc[1][1]+', level 2: '+S.placement.acc[2][0]+'/'+S.placement.acc[2][1]+', level 3: '+S.placement.acc[3][0]+'/'+S.placement.acc[3][1]+'.':'Not taken yet.')+'</p><button class="btn" data-act="place">'+(S.placement?'Retake':'Take it')+'</button></div>';
+ h+='<div class="card"><b>Backup</b><p class="mute">Progress lives in this browser only. Copy a backup now and then, especially before switching devices.</p><button class="btn" data-act="exportcopy">Copy backup</button> <button class="btn" data-act="exportfile">Download backup</button><textarea id="restore-t" placeholder="Paste a backup here to restore"></textarea><button class="btn" data-act="restore">Restore from pasted backup</button></div>';
+ h+='<div class="card"><button class="btn r0" data-act="reset">Reset all progress</button></div>';
+ h+='<details><summary>Assumptions behind this plan</summary><ul><li>Your level is "rusty but functional", but that is self-reported. The placement check is also self-graded, so it can be off in either direction.</li><li>Passive vocabulary tends to return faster than active recall, so cards start Russian first and shift toward English to Russian over time.</li><li>10-15 minutes works only if each day has one small job, so the day is split into flashcards plus one rotating task.</li><li>The built-in deck is a starter set of about 100 words. Reaching your old level needs thousands, so the plan relies on you adding words from real use and on Claude generating batches.</li><li>Russian has changed since about 2001 (technology, slang, loanwords), so some of your old vocabulary may sound dated.</li><li>Browser text-to-speech is not a native speaker. Use real audio alongside it.</li><li>Intervals are a simplified spaced-repetition schedule, not a tuned algorithm. Adjust new cards per day if reviews pile up.</li></ul></details>';
+ return h;
+}
+
+/* ----- placement ----- */
+function startPlace(){var pick=function(l){return shuffle(BASE.filter(function(c){return c.lvl===l;})).slice(0,5);};PL={items:[].concat(pick(1),pick(2),pick(3)),i:0,shown:false,res:[],done:false};go('place');}
+function applyPlace(){
+ var t=today(),acc={1:[0,0],2:[0,0],3:[0,0]},tested={};
+ PL.res.forEach(function(r){acc[r.c.lvl][1]++;if(r.k)acc[r.c.lvl][0]++;tested[r.c.id]=1;});
+ PL.res.forEach(function(r){if(r.k)S.cards[r.c.id]={box:3,due:addDays(t,4+Math.floor(Math.random()*4)),reps:1,lapses:0,last:t};});
+ BASE.forEach(function(c){if(tested[c.id]||S.cards[c.id])return;var a=acc[c.lvl],p=a[1]?a[0]/a[1]:0;if(p>=0.8)S.cards[c.id]={box:2,due:addDays(t,Math.floor(Math.random()*6)),reps:0,lapses:0,last:t};});
+ S.placement={date:t,acc:acc};save();
+}
+function vPlace(){
+ if(!PL)return '<h1>Placement check</h1><div class="card"><p>You will see 15 Russian words, five at each difficulty. Say the meaning out loud first, then reveal and grade yourself honestly.</p><button class="btn primary wide" data-act="pstart">Begin</button></div>';
+ if(PL.done){
+  var a=S.placement.acc,h='<h1>Result</h1><div class="card"><p>Level 1 (basic): <b>'+a[1][0]+'/'+a[1][1]+'</b></p><p>Level 2 (intermediate): <b>'+a[2][0]+'/'+a[2][1]+'</b></p><p>Level 3 (harder): <b>'+a[3][0]+'/'+a[3][1]+'</b></p></div>';
+  var strong=(a[1][0]>=4)+(a[2][0]>=4)+(a[3][0]>=4);
+  h+='<p>'+(strong>=2?'You know a lot of the starter words, so most of that deck will show up as quick reviews. The real growth will come from harder cards: use the card-generator prompt on the Speak tab.':(strong===1?'A mixed picture, which is typical after 25 years. Known words were scheduled as reviews and the rest will be learned fresh.':'Most words will come back as new cards, which is a fine place to start. Recognition tends to return faster than you expect.'))+'</p><p class="mute">Only 15 words were tested, so treat this as a rough first guess.</p><button class="btn primary wide" data-act="tab" data-v="today">Go to Today</button>';
+  return h;
+ }
+ var c=PL.items[PL.i];
+ var h2='<small>Word '+(PL.i+1)+' of '+PL.items.length+'</small><div class="bar" style="margin:6px 0"><i class="mat" style="width:'+Math.round(100*PL.i/PL.items.length)+'%"></i></div><div class="card"><div class="big">'+esc(fmt(c.ru))+'</div>';
+ if(!PL.shown)return h2+'<p class="hint">Say the meaning, then reveal.</p><button class="btn primary wide" data-act="preveal">Reveal</button></div>';
+ return h2+'<div class="ans">'+esc(c.en)+'</div><div class="row"><button class="btn r2" style="flex:1" data-act="pans" data-k="1">I knew it</button><button class="btn r0" style="flex:1" data-act="pans" data-k="0">Did not know</button></div></div>';
+}
+
+/* ---------- actions ---------- */
+function act(a,b){
+ var ds2=b.dataset||{};
+ switch(a){
+ case 'tab':go(ds2.v);break;
+ case 'place':PL=null;go('place');break;
+ case 'pstart':startPlace();break;
+ case 'preveal':PL.shown=true;render();break;
+ case 'pans':PL.res.push({c:PL.items[PL.i],k:ds2.k==='1'});PL.i++;PL.shown=false;if(PL.i>=PL.items.length){PL.done=true;applyPlace();}render();break;
+ case 'chk':ck()[ds2.k]=!!b.checked;save();render();break;
+ case 'startsess':startSession(false);break;
+ case 'extra':startSession(true);break;
+ case 'reveal':SES.shown=true;render();break;
+ case 'rate':rate(+ds2.r);break;
+ case 'endsess':SES=null;go('today');break;
+ case 'speak':speak(ds2.t,false);break;
+ case 'copy':copyText(document.getElementById(ds2.src).textContent);break;
+ case 'newscn':pickScn();render();break;
+ case 'savespk':var tx=($('#spk-t').value||'').trim();if(!tx){toast('Write a note first');break;}S.spk=(S.spk||[]).concat([{d:today(),t:tx}]);save();render();toast('Saved');break;
+ case 'addcard':
+  var ru=($('#nru').value||'').trim(),en=($('#nen').value||'').trim();
+  if(!ru||!en){toast('Russian and English are required');break;}
+  if(hasWord(ru)){toast('That word is already in your cards');break;}
+  S.custom.push({id:newId(),deck:$('#ndeck').value,lvl:0,ru:ru,en:en,ex:($('#nex').value||'').trim(),exEn:($('#nexen').value||'').trim()});save();render();toast('Card added');break;
+ case 'import':
+  var txt=$('#imp-t').value||'',dk=$('#imp-d').value,n=0,sk=0;
+  txt.split('\n').forEach(function(line){line=line.replace(/^\s*\d+[.)]\s*/,'').replace(/^```.*$/,'');var p=line.trim().split('|').map(function(s){return s.trim();});if(p.length<2||!p[0]||!p[1])return;if(hasWord(p[0])){sk++;return;}S.custom.push({id:newId(),deck:dk,lvl:0,ru:p[0],en:p[1],ex:p[2]||'',exEn:p[3]||''});n++;});
+  save();render();toast(n?('Imported '+n+(sk?', skipped '+sk+' duplicates':'')):(sk?'All were duplicates':'No valid lines found'));break;
+ case 'delc':S.custom=S.custom.filter(function(c){return c.id!==ds2.id;});delete S.cards[ds2.id];save();render();break;
+ case 'lmode':LS.mode=ds2.m;LS.q=null;LS.score=0;LS.n=0;render();break;
+ case 'slow':LS.slow=!!b.checked;break;
+ case 'lnext':lsNext();render();break;
+ case 'lplay':if(LS.q)speak(LS.q.text,LS.slow);break;
+ case 'lans':if(LS.ans===null){LS.ans=+ds2.i;lsScore(LS.q.opts[LS.ans]===LS.q.ans);render();}break;
+ case 'lreveal':LS.revealed=true;render();break;
+ case 'lself':lsScore(ds2.k==='1');lsNext();render();break;
+ case 'exportcopy':copyText(JSON.stringify(S));break;
+ case 'exportfile':try{var bl=new Blob([JSON.stringify(S)],{type:'application/json'}),u=URL.createObjectURL(bl),an=document.createElement('a');an.href=u;an.download='russian-revival-backup.json';document.body.appendChild(an);an.click();document.body.removeChild(an);}catch(e){toast('Download blocked, use Copy backup');}break;
+ case 'restore':try{var o=JSON.parse($('#restore-t').value);if(!o||!o.cards)throw 0;S=Object.assign(def(),o);S.cfg=Object.assign(def().cfg,o.cfg||{});save();render();toast('Restored');}catch(e){toast('That is not a valid backup');}break;
+ case 'reset':if(confirm('Reset all progress and custom cards?')){S=def();save();SES=null;PL=null;render();toast('Reset');}break;
+ }
+}
+document.addEventListener('click',function(e){var b=e.target.closest('[data-act]');if(!b)return;if(b.tagName==='INPUT')return;act(b.dataset.act,b);});
+document.addEventListener('change',function(e){
+ var t=e.target;
+ if(t.tagName==='INPUT'&&t.dataset.act){act(t.dataset.act,t);return;}
+ if(t.dataset&&t.dataset.cfg){var k=t.dataset.cfg;if(k==='stress')S.cfg.stress=t.checked;else if(k==='newPerDay')S.cfg.newPerDay=+t.value;else if(k==='dir')S.cfg.dir=t.value;else if(k==='start'&&t.value)S.start=t.value;save();toast('Saved');}
+});
+document.addEventListener('input',function(e){if(e.target.id==='q'||e.target.id==='fd')filterWords();});
+document.addEventListener('keydown',function(e){
+ var tg=e.target.tagName;if(tg==='INPUT'||tg==='TEXTAREA'||tg==='SELECT')return;
+ if(VIEW==='study'&&SES&&!SES.done){
+  if(!SES.shown&&(e.key===' '||e.key==='Enter')){e.preventDefault();SES.shown=true;render();}
+  else if(SES.shown&&'1234'.indexOf(e.key)>-1&&e.key){rate(+e.key-1);}
+ }
+});
+if(window.speechSynthesis){window.speechSynthesis.onvoiceschanged=function(){if(VIEW==='listen'&&!LS.q)render();};}
+if(window.__TEST){window.__TEST.go=go;window.__TEST.act=act;window.__TEST.S=function(){return S;};window.__TEST.BASE=BASE;}
+render();
+})();
+</script>
+<script>
+if('serviceWorker' in navigator && /^https?:/.test(location.protocol)){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}
+</script>
+</body>
+</html>
